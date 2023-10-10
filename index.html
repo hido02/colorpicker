@@ -8,118 +8,94 @@
     <script src="colorjoe/colorjoe.min.js"></script>
     <style>
         body {
-            background: #f3f3f3;
+            background: #eeeeee;
+            margin: 20px;
+        }
+
+        .colorPicker {
+            background: none;
+            border: none;
             margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        }
+
+        .colorPicker .oned {
+            margin-right: 0;
         }
 
         .container {
-            width: 100%;
-            max-width: 400px;
-            background: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .colorjoe-container {
-            max-width: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .colorjoe {
-            width: 200px;
-            height: 200px;
+            flex-direction: column;
+            width: 100%;
+            max-width: 500px; /* Limit the maximum width for larger screens */
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            margin: 0 auto; /* Center the container horizontally */
         }
 
         .config {
-            margin-top: 20px;
+            flex-grow: 1;
+            margin: 0;
         }
 
         .config-title {
             text-align: center;
-            padding: 10px 0;
-            font-family: Arial, sans-serif;
+            padding: 15px 0;
+            font-family: sans-serif;
             font-weight: bold;
-            font-size: 1.2em;
         }
 
         .selected-color-text {
             text-align: center;
-            font-family: sans-serif;
+            font-family: monospace;
             font-size: 1.2em;
-            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
-        .selected-color {
-            height: 30px;
-            border: 2px solid #eeeeee;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px auto;
-        }
-
+        .selected-color,
         .saved-color {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            height: 15px;
+            border: 1px solid #eeeeee;
+            border-radius: 3px;
             cursor: pointer;
-            margin-right: 10px;
+            width: 100%;
+            margin-bottom: 10px; /* Adjust margin between saved colors */
         }
 
+        .saved-color:not(:last-of-type) {
+            margin-bottom: 10px;
+        }
+
+        /* Saved Colors 및 Save Color 버튼 정렬 스타일 */
         .saved-color-container {
             display: flex;
-            justify-content: center; /* Change from "center" to "flex-start" */
-            flex-direction: row;
-            flex-wrap: nowrap; /* Prevent wrapping to the next line */
-            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
 
         /* Responsive styles for smaller screens */
         @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-
-            .config-title {
-                font-size: 1em;
-            }
-
-            .selected-color-text {
-                font-family: monospace !important; 
-                font-size: 1em;
-            }
-
-            .colorjoe {
-                width: 150px;
-                height: 150px;
+            .selected-color {
+                height: 20px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="colorjoe-container">
-            <div class="colorjoe"></div>
-        </div>
+        <div class="colorjoe"></div>
         <div class="config">
             <div class="config-title">Selected Color</div>
             <div class="selected-color-text">#009578</div>
             <div class="selected-color"></div>
             <div class="config-title">Saved Colors</div>
             <!-- Saved Colors 목록 및 버튼 추가 -->
-            <div class="saved-color-container">
             <div class="saved-color"></div>
             <div class="saved-color"></div>
             <div class="saved-color"></div>
             <div class="saved-color"></div>
             <div class="saved-color"></div>
-        </div>
         </div>
     </div>
     <script>
@@ -141,7 +117,7 @@
                     this.showSavedColor(el, this.savedColors[i]);
 
                     el.addEventListener("mouseup", e => {
-                        if (e.button == 0) { // 마우스 왼쪽 버튼 클릭 확인
+                        if(e.button == 0) { // 마우스 왼쪽 버튼 클릭 확인
                             this.saveColor(this.selectedColor, i);
                             this.showSavedColor(el, this.selectedColor);
                         }
@@ -155,15 +131,14 @@
                 this.root.querySelector(".selected-color-text").textContent = color;
                 this.root.querySelector(".selected-color").style.background = color;
 
-                if (!skipCjUpdate) {
+                if(!skipCjUpdate) {
                     this.colorjoe.set(color);
                 }
             }
 
             getSavedColors() {
                 const saved = JSON.parse((localStorage.getItem("colorpicker-saved")) || "[]");
-
-
+                
                 return new Array(5).fill("#ffffff").map((defaultColor, i) => {
                     return saved[i] || defaultColor;
                 })
@@ -177,8 +152,7 @@
             saveColor(color, i) {
                 console.log(color);
                 this.savedColors[i] = color;
-                localStorage.setItem("colorpicker-saved", JSON.stringify(this.savedColors));
-
+                localStorage.setItem("colorpicked-saved", JSON.stringify(this.savedColors));
             }
         }
 
